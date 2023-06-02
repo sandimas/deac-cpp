@@ -293,7 +293,11 @@ void deac(struct xoshiro256p_state * rng, double * const imaginary_time,
     #ifndef ZEROT
         double beta = 1.0/temperature;
     #endif
-    double zeroth_moment = isf[0];
+    #ifndef SINGLE_PARTICLE_FERMIONIC_SPECTRAL_FUNCTION
+        double zeroth_moment = isf[0];
+    #else
+        double zeroth_moment = 1.0;
+    #endif
     bool use_first_moment = first_moment >= 0.0;
     bool use_third_moment = third_moment >= 0.0;
 
@@ -367,15 +371,15 @@ void deac(struct xoshiro256p_state * rng, double * const imaginary_time,
                 #ifndef ZEROT
                     #ifdef USE_HYPERBOLIC_MODEL
                         isf_term_positive_frequency[isf_term_idx] = df*exp(-t*f)/(1.0 + exp(-beta*f));
-                        isf_term_negative_frequency[isf_term_idx] = df*exp(-bmt*f)/(1.0 + exp(-beta*f));
+                        isf_term_negative_frequency[isf_term_idx] = df/(exp(-t*f) + exp(bmt*f));
                     #endif
                     #ifdef USE_STANDARD_MODEL
                         isf_term_positive_frequency[isf_term_idx] = df*exp(-t*f)/(1.0 + exp(-beta*f));
-                        isf_term_negative_frequency[isf_term_idx] = df*exp(-bmt*f)/(1.0 + exp(-beta*f));
+                        isf_term_negative_frequency[isf_term_idx] = df/(exp(-t*f) + exp(bmt*f));
                     #endif
                     #ifdef USE_NORMALIZATION_MODEL
                         isf_term_positive_frequency[isf_term_idx] = df*exp(-t*f)/(1.0 + exp(-beta*f));
-                        isf_term_negative_frequency[isf_term_idx] = df*exp(-bmt*f)/(1.0 + exp(-beta*f));
+                        isf_term_negative_frequency[isf_term_idx] = df/(exp(-t*f) + exp(bmt*f));
                     #endif
                 #endif
                 #ifdef ZEROT
